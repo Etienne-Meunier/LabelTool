@@ -40,7 +40,7 @@ class LabelTool:
             self.report = []
             self.frame_nb = 0
             self.box = None
-            self.step_back = 20
+            self.step_back = 1
             self.loop = True
 
     def reset_tracker(self):
@@ -96,7 +96,7 @@ class LabelTool:
             self.loop = False  # Stop the loop
 
         if key == KEYS['KEY_BACKWARD']:
-            self.frame_nb = (self.frame_nb - 20) if self.frame_nb > self.step_back else 0
+            self.frame_nb = (self.frame_nb - self.step_back) if self.frame_nb > self.step_back else 0
             self.report = [a for a in self.report if a[0] < self.frame_nb]
             self.video.set(cv2.CAP_PROP_POS_FRAMES, self.frame_nb)
             self.reset_tracker()
