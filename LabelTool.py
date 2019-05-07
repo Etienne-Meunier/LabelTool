@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import Tk
 import ntpath
 from tkinter.filedialog import askopenfilename,askdirectory
+from pathlib import Path
 
 import cv2
 import pandas as pd
@@ -11,8 +12,8 @@ import pandas as pd
 KEYS = {'KEY_SELECT': ord('s'), 'KEY_QUIT': ord('q'), 'KEY_BACKWARD': ord('b'), 'KEY_VALIDATE': ord('v'),
         'KEY_DELETE': ord('d')}
 
-FOLDER_VIDEOS = ''
-FOLDER_LABELS = ''
+FOLDER_VIDEOS = '//CRANAS/Medias_Archives/DWLOXC~U'
+FOLDER_LABELS = '//CRANAS/Medias_Archives/Labels'
 
 class LabelTool:
 
@@ -26,12 +27,15 @@ class LabelTool:
         Tk().withdraw()
         self.folder_labels = askdirectory(initialdir=FOLDER_LABELS,title='Labels Directory')
         self.folder_videos = askdirectory(initialdir=FOLDER_VIDEOS,title='Videos Directory')
+        print(self.folder_labels)
+        print(self.folder_videos)
         self.select_video()
         cv2.namedWindow('frame',cv2.WINDOW_NORMAL)
-        self.video = cv2.VideoCapture(self.filename)
+        self.video = cv2.VideoCapture(str(self.filename.absolute()))
         self.loop = False
         self.finished_annotation = False
         if self.filename != '' :
+            print('File Name : ', self.filename)
             ret = False
             while not ret:
                 ret, self.frame = self.video.read()
@@ -61,20 +65,21 @@ class LabelTool:
         Returns: name of the csv file
 
         """
-        n = path.replace('/', '_._').replace('.mov', ".csv")
+        path = str(path.absolute())
+        n = path.replace(os.sep, '_._').replace('.mov', ".csv")
         return n
 
     @staticmethod
     def create_video_path_report_name(path):
         """
         Convert the csv name into a video path
-        Args:
+        Args:s
             path: path of the csv
 
         Returns: path of the video
 
         """
-        n = path.replace('_._', '/').replace('.csv', ".mov")
+        n = path.replace('_._', os.sep).replace('.csv', ".mov")
         return n
 
     def command_key(self):
@@ -132,9 +137,10 @@ class LabelTool:
             # List of videos
             videos = list()
             for path, subdir, files in os.walk(self.folder_videos):
+                path = Path(path)
                 for name in files:
                     if fnmatch(name, '*.mov'):
-                        path_vid = os.path.join(path, name)
+                        path_vid = path / name
                         if LabelTool.create_label_report_name(path_vid) not in labels: videos.append(path_vid)
 
             # List Box selection
@@ -149,8 +155,9 @@ class LabelTool:
             button = Button(ch, text='print', command=lambda: ch.quit())
             button.pack()
             ch.mainloop()
-            self.filename = listbox.get(ACTIVE)
+            self.filename = Path(listbox.get(ACTIVE))
             ch.destroy()
+
 
     def tracker_frame(self):
         """
@@ -160,13 +167,13 @@ class LabelTool:
         success = False
         if self.initBB is not None:
             (success, self.box) = self.tracker.update(self.frame)
+            if not success : self.reset_tracker()
         LabelTool.display_frame(self.frame,self.frame_nb,self.box)
 
     @staticmethod
     def display_frame(frame,frame_nb,box):
         """
         Make a copy of frame and display it after putting the annotations
-
         Args:t
             frame : frame to display
             frame_nb ; number of the frame to display
@@ -185,7 +192,9 @@ class LabelTool:
         Export report to csv file
         """
         df = pd.DataFrame(self.report,columns=['frame_nb','position'])
-        df.to_csv(os.path.join(self.folder_labels, LabelTool.create_label_report_name(self.filename)))
+        report_path = os.path.join(self.folder_labels, LabelTool.create_label_report_name(self.filename))
+        df.to_csv(report_path)
+        print('Save Report as : ',report_path)
 
     def process_frames(self):
         '''
