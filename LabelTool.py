@@ -12,8 +12,8 @@ import pandas as pd
 KEYS = {'KEY_SELECT': ord('s'), 'KEY_QUIT': ord('q'), 'KEY_BACKWARD': ord('b'), 'KEY_VALIDATE': ord('v'),
         'KEY_DELETE': ord('d')}
 
-FOLDER_VIDEOS = '//CRANAS/Medias_Archives/DWLOXC~U'
-FOLDER_LABELS = '//CRANAS/Medias_Archives/Labels'
+FOLDER_VIDEOS = ''
+FOLDER_LABELS = ''
 
 class LabelTool:
 
