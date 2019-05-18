@@ -1,7 +1,8 @@
 import os
-from fnmatch import fnmatch
+from wcmatch.fnmatch import fnmatch
 from tkinter import *
 from tkinter import Tk
+import re
 import ntpath
 from tkinter.filedialog import askopenfilename,askdirectory
 from pathlib import Path
@@ -11,6 +12,8 @@ import pandas as pd
 
 KEYS = {'KEY_SELECT': ord('s'), 'KEY_QUIT': ord('q'), 'KEY_BACKWARD': ord('b'), 'KEY_VALIDATE': ord('v'),
         'KEY_DELETE': ord('d')}
+
+FORMAT_VIDEOS = ['mov', 'mp4', 'avi']
 
 FOLDER_VIDEOS = ''
 FOLDER_LABELS = ''
@@ -66,7 +69,7 @@ class LabelTool:
 
         """
         path = str(path.absolute())
-        n = path.replace(os.sep, '_._').replace('.mov', ".csv")
+        n = path.replace(os.sep, '_._')+'.csv'
         return n
 
     @staticmethod
@@ -79,7 +82,8 @@ class LabelTool:
         Returns: path of the video
 
         """
-        n = path.replace('_._', os.sep).replace('.csv', ".mov")
+        n = path.replace('_._', os.sep).replace('.csv', '')
+        n = re.sub('.csv$', '', n)
         return n
 
     def command_key(self):
@@ -139,7 +143,7 @@ class LabelTool:
             for path, subdir, files in os.walk(self.folder_videos):
                 path = Path(path)
                 for name in files:
-                    if fnmatch(name, '*.mov'):
+                    if fnmatch(name, ['*.'+v for v in FORMAT_VIDEOS]):
                         path_vid = path / name
                         if LabelTool.create_label_report_name(path_vid) not in labels: videos.append(path_vid)
 
@@ -226,8 +230,3 @@ class LabelTool:
                 break
         video.release()
         cv2.destroyAllWindows()
-
-if __name__ == '__main__':
-    lt = LabelTool()
-    lt.process_frames()
-    #LabelTool.show_me_labels()
