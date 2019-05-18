@@ -1,6 +1,6 @@
 # Label Tool 
 
-Label tool is a basic and free labelling tool for videos, very intuitive to use it allows to label video with a bounding box around one object, it handles directly the video file and integrate a tracking tool that allow to do the labelling step faster.
+Label tool is a basic and free labeling tool for videos, very intuitive to use it allows to label video with a bounding box around one object, it handles directly the video file and integrate a tracking tool that allow to do the labeling step faster.
 
 ![](demo.gif)
 
@@ -13,14 +13,14 @@ pip3 install -r requirements.txt
 ### Running LabelTool
 
 ```
-python3 Labelling.py
+python3 Labeling.py
 ```
 
-You are then invated to select the **Folders** where you store the Labels and the Videos. The program will then compare the two and give you a list of videos that are not been labelled yet, you just have to select a video from the list to start. 
+You are then invited to select the **Folders** where you store the Labels and the Videos. The program will then compare the two and give you a list of videos that are not been labeled yet, you just have to select a video from the list to start. 
 
 ![](menu1.png)
 
-You have then the labelling tool open with the frame number on the top left in red. 
+You have then the labeling tool open with the frame number on the top left in red. 
 
 Commands : 
 
@@ -38,13 +38,18 @@ Labels are stored in the form
 
 `Frame_nb`, `position` with position format as `(x,y,w,h)`
 
-#### Visualize Labelisation
-
-If you want to control a labelisation you can use : 
+#### Visualize Labels
 
 ```
 python3 Visualize.py
 ```
 
-The program will find back the video based on the original video folder and display the labelisation along with the video. 
+You then have to select the CSV file containing the labels, the program will find back the video based on the original video folder and display the labeling along with the video. 
 
+
+### To Do
+
+- Support Multi-Objects labeling
+- Add Labels-Name 
+- Improve object tracking
+- Nice to have : create a mode for segmentation
