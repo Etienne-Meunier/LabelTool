@@ -160,6 +160,7 @@ class LabelTool:
             button.pack()
             ch.mainloop()
             self.filename = Path(listbox.get(ACTIVE))
+            self.filename = os.path.splitdrive(self.filename)[1]
             ch.destroy()
 
 
@@ -196,8 +197,7 @@ class LabelTool:
         Export report to csv file
         """
         df = pd.DataFrame(self.report,columns=['frame_nb','position'])
-        #report_path = os.path.join(self.folder_labels, LabelTool.create_label_report_name(self.filename))
-        report_path = self.folder_labels + '/'+ LabelTool.create_label_report_name(self.filename)
+        report_path = os.path.join(self.folder_labels, LabelTool.create_label_report_name(self.filename))
         df.to_csv(report_path)
         print('Save Report as : ',report_path)
 
