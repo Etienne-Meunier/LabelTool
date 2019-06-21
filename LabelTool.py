@@ -15,8 +15,9 @@ KEYS = {'KEY_SELECT': ord('s'), 'KEY_QUIT': ord('q'), 'KEY_BACKWARD': ord('b'), 
 
 FORMAT_VIDEOS = ['mov', 'mp4', 'avi']
 
-FOLDER_VIDEOS = ''
-FOLDER_LABELS = ''
+
+FOLDER_LABELS = '//CRANAS/Medias_Archives/Labels'
+FOLDER_VIDEOS = 'E:/DWLOXC~U'
 
 class LabelTool:
 
@@ -68,7 +69,7 @@ class LabelTool:
         Returns: name of the csv file
 
         """
-        path = str(path.absolute())
+        path = os.path.splitdrive(path.absolute())[1]
         n = path.replace(os.sep, '_._')+'.csv'
         return n
 
@@ -160,7 +161,6 @@ class LabelTool:
             button.pack()
             ch.mainloop()
             self.filename = Path(listbox.get(ACTIVE))
-            self.filename = os.path.splitdrive(self.filename)[1]
             ch.destroy()
 
 
